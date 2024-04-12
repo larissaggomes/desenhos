@@ -66,6 +66,8 @@ const ler = () => {
                 td_autor = document.createElement('td');
                 td_descricao = document.createElement('td');
                 td_data = document.createElement('td');
+                td_imagem = document.createElement('td');
+                img_imagem = document.createElement('img');
                 td_editar = document.createElement('td');
                 td_deletar = document.createElement('td');
                 icon_editar = document.createElement('i');
@@ -79,6 +81,13 @@ const ler = () => {
                 td_autor.innerText = produto.autor; // <td> 11 </td>
                 td_descricao.innerText = produto.descricao; // <td> 6 </td>
                 td_data.innerText = produto.data; // <td> 3 </td>
+
+                
+                img_imagem = document.createElement('img');
+                img_imagem.src = `http://localhost:4000/imagens/${produto.imagem}`;
+                img_imagem.classList = 'preview';
+                td_imagem.append(img_imagem);
+                
 
                 // adicionado icones nos botões de editar e deletar
                 // <i class="fa fa-pencil" aria-hidden="true"></i>
@@ -109,6 +118,7 @@ const ler = () => {
                 tr.append(td_autor);
                 tr.append(td_descricao);
                 tr.append(td_data);
+                tr.append(td_imagem);
                 tr.append(td_editar);
                 tr.append(td_deletar);
 
@@ -143,7 +153,7 @@ const salvarDesenho = () => {
         //verificando se existe um id na url
         (id_produto) ?
             //se sim editamos 
-            editar(id_produto, inputNome.value, inputAutor.value, inputDescricao.value, inputData.value, inputImagem.value)
+            editar(formData,id_produto)
             //se nao, cadastramos 
             : cadastrar(formData);
 
@@ -151,10 +161,7 @@ const salvarDesenho = () => {
         //caso os campos estejam invalidos, mostrar mensagem na tela
         alert("Campos obrigatórios");
     }
-
-
 }
-
 
 const cadastrar = (formData) => {
     // chamado o metodo fetch e adicionando a url do endpoint da API
@@ -175,14 +182,8 @@ const cadastrar = (formData) => {
         .then(json => window.location.replace('tabela.html'));
 }
 
-const editar = (id, nome, preco, descricao, data) => {
+const editar = (formData, id) => {
     // criando o objeto do json do payload(corpo que leva os dados)
-    payload = JSON.stringify({
-        nome: nome,
-        preco: preco,
-        descricao: descricao,
-        data: data
-    })
 
     // chamado o metodo fetch e adicionando a url do endpoint da API
     fetch("http://localhost:4000/produtos/" + id, {
@@ -191,12 +192,8 @@ const editar = (id, nome, preco, descricao, data) => {
         method: "PUT",
 
         // adiconado os dados na requisiçao para enviar para a API
-        body: payload,
+        body: formData,
 
-        // Adding headers to the request
-        headers: {
-            "Content-type": "application/json; charset=UTF-8"
-        }
     })
 
         // Converting to JSON
@@ -269,8 +266,16 @@ const gerarRelatorio = () =>{
         });
 }
 
+function previewImage() {
+    const input = document.getElementById('input-imagem');
+    
+    if (input) {
+        input.addEventListener('change', renderImagem);   
+    }
+}
+
 //  Função para exibir a imagem após o upload
-function previewImagem(event) {
+function renderImagem(event) {
     var input = event.target;
     var preview = document.getElementById('preview-img');
     
@@ -284,10 +289,10 @@ function previewImagem(event) {
       reader.readAsDataURL(input.files[0]); // Converte a imagem para base64
     }
 }  // Adicionando um ouvinte de eventos para o input de imagem
- document.getElementById('input-imagem').addEventListener('change', previewImagem);
 
 window.addEventListener('DOMContentLoaded', event => {
-    ler()
-    getbyid()
-    gerarRelatorio()
+    ler();
+    getbyid();
+    gerarRelatorio();
+    previewImage();
 });
