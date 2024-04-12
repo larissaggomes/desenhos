@@ -126,7 +126,6 @@ const salvarDesenho = () => {
     const inputDescricao = document.getElementById('descricao');
     const inputData = document.getElementById('data');
     const inputImagem = document.getElementById('input-imagem');
-    console.log(inputImagem.files);
 
     //verificando se os valores dos inputs sao validos
     if (inputNome.value && inputAutor.value && inputDescricao && inputData && inputImagem) {
@@ -148,8 +147,6 @@ const salvarDesenho = () => {
             //se nao, cadastramos 
             : cadastrar(formData);
 
-
-
     } else {
         //caso os campos estejam invalidos, mostrar mensagem na tela
         alert("Campos obrigatórios");
@@ -160,26 +157,22 @@ const salvarDesenho = () => {
 
 
 const cadastrar = (formData) => {
-    // POST request using fetch()
+    // chamado o metodo fetch e adicionando a url do endpoint da API
     fetch("http://localhost:4000/produtos", {
 
-        // Adding method type
+        // selecionando o método de envio POST
         method: "POST",
 
-        // Adding body or contents to send
+        // adiconado os dados na requisiçao para enviar para a API
         body: formData,
 
-        // Adding headers to the request
-        headers: {
-            "Content-type": "application/json; charset=UTF-8"
-        }
     })
 
         // Converting to JSON
         .then(response => response.json())
 
         // redirecionndo para tela do tabela
-        // .then(json => window.location.replace('tabela.html'));
+        .then(json => window.location.replace('tabela.html'));
 }
 
 const editar = (id, nome, preco, descricao, data) => {
@@ -191,13 +184,13 @@ const editar = (id, nome, preco, descricao, data) => {
         data: data
     })
 
-    // contatenando o id na url para fazer o PUT
+    // chamado o metodo fetch e adicionando a url do endpoint da API
     fetch("http://localhost:4000/produtos/" + id, {
 
-        // chamando o metodo PUT serve para fazer atualizaçao
+        // selecionando o método de envio POST
         method: "PUT",
 
-        // adiconado o payload ao corpo da requisiçao 
+        // adiconado os dados na requisiçao para enviar para a API
         body: payload,
 
         // Adding headers to the request
